@@ -8,10 +8,10 @@
   <meta name="description" content="LimpIA studio: analiza, mejora y pule tus textos con herramientas de análisis lingüístico.">
   <title>LimpIA studio — AI Text Workspace</title>
 
-  <!-- Favicon: logotipo de cuatro cuadrados -->
+  <!-- FAVICON: LOGOTIPO DE CUATRO CUADRADOS -->
   <link rel="icon" type="image/svg+xml" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 64 64'%3E%3Crect x='5' y='5' width='24' height='24' rx='5' fill='%238b5cf6'/%3E%3Crect x='35' y='5' width='24' height='24' rx='5' fill='%2360a5fa'/%3E%3Crect x='5' y='35' width='24' height='24' rx='5' fill='%2334d399'/%3E%3Crect x='35' y='35' width='24' height='24' rx='5' fill='%23f59e0b'/%3E%3C/svg%3E">
 
-  <!-- Tailwind CSS CDN -->
+  <!-- TAILWIND CSS -->
   <script src="https://cdn.tailwindcss.com"></script>
 
   <script>
@@ -26,7 +26,7 @@
     };
   </script>
 
-  <!-- Tipografía -->
+  <!-- TIPOGRAFÍA -->
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
   <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&display=swap" rel="stylesheet">
@@ -169,7 +169,38 @@
     }
 
     /* =========================================
-       3. LOGOTIPO
+       3. CORRECCIÓN DEFINITIVA DEL ESPACIO
+    ========================================= */
+
+    /*
+      IMPORTANTE:
+      #welcomeView tiene display:flex.
+      Por especificidad CSS, esa regla puede prevalecer
+      sobre la clase .hidden de Tailwind.
+
+      Esta regla garantiza que, cuando la pantalla inicial
+      se oculte, desaparezca completamente del documento
+      y no deje ningún espacio en blanco.
+    */
+
+    #welcomeView.hidden {
+      display: none !important;
+    }
+
+    #appView.hidden {
+      display: none !important;
+    }
+
+    #outputSection.hidden {
+      display: none !important;
+    }
+
+    .hidden {
+      display: none !important;
+    }
+
+    /* =========================================
+       4. LOGOTIPO
     ========================================= */
 
     .brand-logo {
@@ -185,7 +216,7 @@
     }
 
     /* =========================================
-       4. HEADER
+       5. HEADER
     ========================================= */
 
     .site-header {
@@ -229,7 +260,7 @@
     }
 
     /* =========================================
-       5. PANTALLA DE BIENVENIDA
+       6. PANTALLA DE BIENVENIDA
     ========================================= */
 
     #welcomeView {
@@ -316,7 +347,7 @@
     }
 
     /* =========================================
-       6. BOTONES
+       7. BOTONES
     ========================================= */
 
     .btn-primary {
@@ -373,7 +404,7 @@
     }
 
     /* =========================================
-       7. APLICACIÓN PRINCIPAL
+       8. APLICACIÓN PRINCIPAL
     ========================================= */
 
     #appView {
@@ -455,7 +486,7 @@
     }
 
     /* =========================================
-       8. RESULTADOS Y MÉTRICAS
+       9. RESULTADOS Y MÉTRICAS
     ========================================= */
 
     .score-panel {
@@ -540,7 +571,7 @@
     }
 
     /* =========================================
-       9. MODAL DE SELECCIÓN DE TONO
+       10. MODAL DE SELECCIÓN DE TONO
     ========================================= */
 
     .modal-backdrop {
@@ -625,7 +656,7 @@
     }
 
     /* =========================================
-       10. RESULTADO HUMANIZADO
+       11. RESULTADO HUMANIZADO
     ========================================= */
 
     .output-text {
@@ -658,7 +689,7 @@
     }
 
     /* =========================================
-       11. FOOTER Y ANIMACIONES
+       12. FOOTER Y ANIMACIONES
     ========================================= */
 
     .site-footer {
@@ -675,6 +706,7 @@
         opacity: 0;
         transform: translateY(16px);
       }
+
       to {
         opacity: 1;
         transform: translateY(0);
@@ -711,6 +743,7 @@
         transition-duration: .01ms !important;
       }
     }
+
   </style>
 </head>
 
@@ -721,11 +754,12 @@
   ========================================== -->
 
   <header class="site-header">
+
     <div class="max-w-7xl mx-auto px-5 py-4 flex items-center justify-between">
 
       <div class="flex items-center gap-3">
 
-        <!-- LOGO SVG: CUATRO CUADRADOS -->
+        <!-- LOGO DE CUATRO CUADRADOS -->
         <svg class="brand-logo" viewBox="0 0 64 64" role="img" aria-label="LimpIA studio">
           <rect x="4" y="4" width="25" height="25" rx="6" fill="#8b5cf6"/>
           <rect x="35" y="4" width="25" height="25" rx="6" fill="#60a5fa"/>
@@ -737,6 +771,7 @@
           <div class="font-extrabold tracking-tight text-lg">
             LimpIA <span class="gradient-text">studio</span>
           </div>
+
           <div class="brand-caption text-[9px] uppercase font-semibold">
             AI Text Workspace
           </div>
@@ -745,9 +780,11 @@
         <span class="beta-badge text-[10px] px-2 py-1 rounded-full font-semibold ml-1">
           Beta v1.0
         </span>
+
       </div>
 
       <div class="flex items-center gap-3">
+
         <span class="hidden sm:block subtle text-xs">
           Procesamiento local
         </span>
@@ -761,6 +798,7 @@
           title="Cambiar tema">
           ☀
         </button>
+
       </div>
 
     </div>
@@ -956,6 +994,7 @@
               id="progressTrack">
 
               <div id="progressBar" class="progress-fill"></div>
+
             </div>
 
             <p id="scoreDescription" class="subtle text-xs leading-relaxed mt-3">
@@ -1092,6 +1131,7 @@
       <footer class="site-footer text-center py-9 mt-12">
 
         <div class="flex justify-center items-center gap-2 mb-2">
+
           <svg width="22" height="22" viewBox="0 0 64 64" aria-hidden="true">
             <rect x="4" y="4" width="25" height="25" rx="6" fill="#8b5cf6"/>
             <rect x="35" y="4" width="25" height="25" rx="6" fill="#60a5fa"/>
@@ -1102,6 +1142,7 @@
           <span class="font-extrabold text-sm">
             LimpIA <span class="gradient-text">studio</span>
           </span>
+
         </div>
 
         <p class="text-[10px]">
@@ -1170,6 +1211,7 @@
 
           <span class="flex-1">
             <span class="tone-title block">Modo Estudiante</span>
+
             <span class="tone-description block">
               Vocabulario cercano y natural, frases fluidas y
               un estilo claro y fácil de entender.
@@ -1177,6 +1219,7 @@
           </span>
 
           <span class="text-lg subtle">→</span>
+
         </button>
 
 
@@ -1190,6 +1233,7 @@
 
           <span class="flex-1">
             <span class="tone-title block">Modo Formal</span>
+
             <span class="tone-description block">
               Redacción profesional, vocabulario preciso
               y estructura académica o corporativa.
@@ -1197,6 +1241,7 @@
           </span>
 
           <span class="text-lg subtle">→</span>
+
         </button>
 
       </div>
@@ -1253,6 +1298,7 @@
     ];
 
     let lastFocusedElement = null;
+    let isTransitioning = false;
 
 
     // =========================================
@@ -1287,8 +1333,7 @@
       try {
         localStorage.setItem('limpia-theme', validTheme);
       } catch (error) {
-        // La aplicación sigue funcionando aunque el almacenamiento
-        // local esté deshabilitado.
+        // La aplicación funciona aunque el almacenamiento esté deshabilitado.
       }
     }
 
@@ -1298,16 +1343,21 @@
       let savedTheme = 'dark';
 
       try {
+
         const storedTheme = localStorage.getItem('limpia-theme');
 
         if (storedTheme === 'light' || storedTheme === 'dark') {
           savedTheme = storedTheme;
         }
+
       } catch (error) {
+
         savedTheme = 'dark';
+
       }
 
       applyTheme(savedTheme);
+
     }
 
 
@@ -1322,28 +1372,56 @@
 
     // =========================================
     // 3. PANTALLA DE BIENVENIDA
+    // CORRECCIÓN DEL ESPACIO EN BLANCO
     // =========================================
 
     $('startBtn').addEventListener('click', () => {
 
+      // Evitar dobles clics durante la transición.
+      if (isTransitioning) return;
+
+      isTransitioning = true;
+
       const welcome = $('welcomeView');
       const app = $('appView');
 
+      // Iniciar la animación de salida.
       welcome.classList.add('is-leaving');
 
       window.setTimeout(() => {
 
+        /*
+          CORRECCIÓN PRINCIPAL:
+          Añadimos hidden a la pantalla de bienvenida.
+
+          La regla CSS #welcomeView.hidden {
+            display: none !important;
+          }
+          elimina por completo su espacio.
+
+          Así el editor se coloca inmediatamente después
+          de la barra superior.
+        */
+
         welcome.classList.add('hidden');
+        welcome.classList.remove('is-leaving');
+
+        // Mostrar la herramienta principal.
         app.classList.remove('hidden');
 
+        // Volver al inicio absoluto de la página.
         window.scrollTo({
           top: 0,
-          behavior: 'smooth'
+          left: 0,
+          behavior: 'instant'
         });
 
+        // Dar el foco al editor sin provocar desplazamientos.
         input.focus({ preventScroll: true });
 
-      }, 380);
+        isTransitioning = false;
+
+      }, 400);
 
     });
 
@@ -1458,7 +1536,7 @@
       const avgSentence = words.length / sentences.length;
 
 
-      // Repetición de comienzos de oración.
+      // Detectar repetición de comienzos de oración.
       const starts = sentences.map(sentence => {
 
         const sentenceWords = getWords(sentence);
@@ -1547,22 +1625,28 @@
       if (data.score < 30) {
 
         label = 'Pocos patrones';
+
         description =
           'Se observan pocas de las señales lingüísticas evaluadas.';
+
         scoreClass = 'score-low';
 
       } else if (data.score < 60) {
 
         label = 'Patrones moderados';
+
         description =
           'Se observan algunas regularidades en la estructura y el vocabulario.';
+
         scoreClass = 'score-medium';
 
       } else {
 
         label = 'Más patrones detectados';
+
         description =
           'Se observan varias señales de regularidad en el texto.';
+
         scoreClass = 'score-high';
 
       }
@@ -1573,8 +1657,7 @@
       $('scoreLabel').textContent = label;
 
       $('scoreDescription').textContent =
-        description +
-        ' El índice no demuestra la autoría del texto.';
+        description + ' El índice no demuestra la autoría del texto.';
 
 
       $('progressBar').style.width = data.score + '%';
@@ -1766,7 +1849,10 @@
 
       document.body.style.overflow = '';
 
-      if (lastFocusedElement && typeof lastFocusedElement.focus === 'function') {
+      if (
+        lastFocusedElement &&
+        typeof lastFocusedElement.focus === 'function'
+      ) {
 
         lastFocusedElement.focus();
 
@@ -1839,8 +1925,10 @@
         original[0] === original[0].toLocaleUpperCase('es');
 
       if (!startsUppercase) {
+
         return replacement.charAt(0).toLocaleLowerCase('es') +
           replacement.slice(1);
+
       }
 
       return replacement.charAt(0).toLocaleUpperCase('es') +
@@ -2037,16 +2125,11 @@
       }
 
 
-      // -----------------------------------------
       // A. VARIACIÓN DE CONECTORES
-      // -----------------------------------------
-
       result = replaceConnectors(result, tone);
 
 
-      // -----------------------------------------
       // B. EXPRESIONES REDUNDANTES Y COMPLEJAS
-      // -----------------------------------------
 
       const studentPhrases = {
 
@@ -2108,9 +2191,7 @@
       });
 
 
-      // -----------------------------------------
       // C. AJUSTES ADICIONALES SEGÚN EL TONO
-      // -----------------------------------------
 
       if (tone === 'student') {
 
@@ -2149,9 +2230,7 @@
       }
 
 
-      // -----------------------------------------
       // D. LIMPIEZA FINAL
-      // -----------------------------------------
 
       result = result
 
@@ -2212,7 +2291,7 @@
       closeToneModal();
 
 
-      // Desplazamiento al resultado.
+      // Desplazamiento hasta el resultado.
       window.setTimeout(() => {
 
         $('outputSection').scrollIntoView({
@@ -2318,21 +2397,7 @@
       6. Guardar el historial de documentos.
       7. Añadir usuarios, créditos y planes de suscripción.
 
-      EJEMPLO CONCEPTUAL DE PETICIÓN:
-
-      const response = await fetch('/api/analyze', {
-        method: 'POST',
-        headers: {
-          'Content-Type': 'application/json'
-        },
-        body: JSON.stringify({
-          text: input.value,
-          tone: 'formal'
-        })
-      });
-
       IMPORTANTE:
-
       Nunca introducir claves API privadas en este HTML.
       Las llamadas a modelos externos deben realizarse
       desde un servidor o una función segura.
