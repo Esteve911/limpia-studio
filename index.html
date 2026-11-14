@@ -1,0 +1,743 @@
+
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta name="theme-color" content="#09090b">
+  <title>LimpIA studio — AI Text Studio</title>
+  <meta name="description" content="Analiza y mejora la claridad y naturalidad de tus textos con LimpIA studio.">
+
+  <!-- Tailwind CSS CDN -->
+  <script src="https://cdn.tailwindcss.com"></script>
+
+  <script>
+    tailwind.config = {
+      darkMode: 'class',
+      theme: {
+        extend: {
+          fontFamily: {
+            sans: ['Inter', 'system-ui', 'sans-serif']
+          },
+          colors: {
+            accent: '#8b5cf6'
+          }
+        }
+      }
+    }
+  </script>
+
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+
+  <style>
+    * { box-sizing: border-box; }
+    body { font-family: Inter, sans-serif; }
+    .glass {
+      background: rgba(24,24,27,.85);
+      border: 1px solid rgba(255,255,255,.09);
+    }
+    .progress {
+      transition: width .6s ease;
+    }
+    textarea { resize: vertical; }
+    .gradient-text {
+      background: linear-gradient(90deg,#a78bfa,#60a5fa);
+      -webkit-background-clip: text;
+      background-clip: text;
+      color: transparent;
+    }
+    .metric-card {
+      background: rgba(39,39,42,.55);
+      border: 1px solid rgba(255,255,255,.06);
+    }
+    button { transition: all .2s ease; }
+    button:focus-visible, textarea:focus-visible {
+      outline: 2px solid #a78bfa;
+      outline-offset: 3px;
+    }
+  </style>
+</head>
+
+<body class="dark bg-zinc-950 text-zinc-100 min-h-screen">
+
+  <!-- HEADER -->
+  <header class="border-b border-white/10 bg-zinc-950/90 sticky top-0 z-20 backdrop-blur">
+    <div class="max-w-7xl mx-auto px-5 py-4 flex items-center justify-between">
+
+      <div class="flex items-center gap-3">
+        <div class="w-10 h-10 rounded-xl bg-violet-600 flex items-center justify-center shadow-lg shadow-violet-900/30">
+          <svg width="23" height="23" viewBox="0 0 24 24" fill="none" stroke="white" stroke-width="2">
+            <path d="M12 3v3m0 12v3M3 12h3m12 0h3M5.6 5.6l2.1 2.1m8.6 8.6 2.1 2.1m0-12.8-2.1 2.1m-8.6 8.6-2.1 2.1"/>
+            <circle cx="12" cy="12" r="4"/>
+          </svg>
+        </div>
+
+        <div>
+          <div class="font-bold tracking-tight text-lg">
+            LimpIA <span class="gradient-text">studio</span>
+          </div>
+          <div class="text-[10px] text-zinc-500 tracking-widest uppercase">
+            AI Text Workspace
+          </div>
+        </div>
+
+        <span class="text-xs bg-violet-500/15 text-violet-300 border border-violet-500/20 px-2 py-1 rounded-full">
+          Beta v1.0
+        </span>
+      </div>
+
+      <div class="flex items-center gap-3">
+        <span class="hidden sm:block text-xs text-zinc-500">Procesamiento local</span>
+        <button id="themeBtn" aria-label="Cambiar tema"
+          class="w-9 h-9 rounded-lg border border-white/10 hover:bg-white/10 flex items-center justify-center">
+          ☀
+        </button>
+      </div>
+    </div>
+  </header>
+
+  <!-- MAIN -->
+  <main class="max-w-7xl mx-auto px-5 py-10">
+
+    <section class="text-center mb-10">
+      <div class="inline-flex items-center gap-2 rounded-full border border-violet-500/20 bg-violet-500/10 px-3 py-1 text-xs text-violet-300 mb-5">
+        <span class="w-2 h-2 bg-green-400 rounded-full"></span>
+        Tu espacio inteligente de escritura
+      </div>
+
+      <h1 class="text-4xl sm:text-5xl font-extrabold tracking-tight mb-4">
+        Escribe mejor. <span class="gradient-text">Comunica mejor.</span>
+      </h1>
+
+      <p class="text-zinc-400 max-w-2xl mx-auto text-sm sm:text-base leading-relaxed">
+        Analiza patrones de escritura, descubre métricas lingüísticas
+        y mejora la claridad de tus textos con herramientas inteligentes.
+      </p>
+    </section>
+
+    <!-- APP GRID -->
+    <div class="grid grid-cols-1 lg:grid-cols-2 gap-6">
+
+      <!-- INPUT PANEL -->
+      <section class="glass rounded-2xl p-5 sm:p-6">
+
+        <div class="flex justify-between items-center mb-5">
+          <div>
+            <h2 class="font-semibold text-lg">Tu texto</h2>
+            <p class="text-xs text-zinc-500 mt-1">Introduce el contenido que quieres analizar</p>
+          </div>
+          <span class="text-xs text-zinc-500 bg-zinc-800 px-3 py-1 rounded-full">
+            INPUT
+          </span>
+        </div>
+
+        <textarea
+          id="inputText"
+          maxlength="20000"
+          placeholder="Pega aquí tu texto o empieza a escribir..."
+          class="w-full h-80 bg-zinc-900/80 border border-zinc-700/70 rounded-xl p-4 text-sm leading-7 text-zinc-200 placeholder-zinc-600 focus:border-violet-500 focus:ring-1 focus:ring-violet-500 outline-none"
+        ></textarea>
+
+        <div class="flex justify-between text-xs text-zinc-500 mt-3">
+          <span id="wordCount">0 palabras</span>
+          <span id="charCount">0 / 20.000 caracteres</span>
+        </div>
+
+        <div class="flex flex-wrap gap-3 mt-6">
+          <button id="exampleBtn"
+            class="flex-1 min-w-[130px] border border-zinc-700 hover:bg-zinc-800 rounded-xl px-4 py-3 text-sm font-medium">
+            ↗ Ejemplo
+          </button>
+
+          <button id="clearBtn"
+            class="border border-zinc-700 hover:bg-zinc-800 rounded-xl px-4 py-3 text-sm">
+            Limpiar
+          </button>
+
+          <button id="analyzeBtn"
+            class="flex-1 min-w-[130px] bg-violet-600 hover:bg-violet-500 rounded-xl px-4 py-3 text-sm font-semibold shadow-lg shadow-violet-900/20">
+            Analizar texto →
+          </button>
+        </div>
+
+        <div class="mt-5 p-3 rounded-xl bg-zinc-900/70 border border-white/5 flex gap-3">
+          <span class="text-lg">🔒</span>
+          <p class="text-xs text-zinc-500 leading-relaxed">
+            Tu texto se analiza en este navegador. No se envía a ningún servidor.
+          </p>
+        </div>
+      </section>
+
+      <!-- RESULTS PANEL -->
+      <section class="glass rounded-2xl p-5 sm:p-6">
+
+        <div class="flex justify-between items-center mb-5">
+          <div>
+            <h2 class="font-semibold text-lg">Análisis del texto</h2>
+            <p class="text-xs text-zinc-500 mt-1">Indicadores lingüísticos estimados</p>
+          </div>
+          <span class="text-xs text-zinc-500 bg-zinc-800 px-3 py-1 rounded-full">
+            RESULTS
+          </span>
+        </div>
+
+        <!-- SCORE -->
+        <div class="rounded-xl bg-zinc-900/80 border border-white/5 p-5 mb-5">
+
+          <div class="flex justify-between items-center mb-4">
+            <span class="text-sm text-zinc-400">Índice de patrones asociados a IA</span>
+            <span id="scoreLabel" class="text-xs text-zinc-500">Sin analizar</span>
+          </div>
+
+          <div class="flex items-end gap-2 mb-4">
+            <span id="score" class="text-6xl font-extrabold tracking-tight">--</span>
+            <span class="text-xl text-zinc-500 mb-2">/100</span>
+          </div>
+
+          <div class="h-2.5 bg-zinc-800 rounded-full overflow-hidden">
+            <div id="progressBar" class="progress h-full bg-violet-500 rounded-full" style="width:0%"></div>
+          </div>
+
+          <p id="scoreDescription" class="text-xs text-zinc-500 mt-3 leading-relaxed">
+            Introduce un texto y pulsa analizar para obtener indicadores.
+          </p>
+        </div>
+
+        <!-- METRICS -->
+        <h3 class="text-sm font-semibold mb-3">Métricas lingüísticas</h3>
+
+        <div class="grid grid-cols-2 gap-3">
+
+          <div class="metric-card rounded-xl p-4">
+            <div class="text-xs text-zinc-500 mb-2">Diversidad léxica</div>
+            <div class="text-2xl font-bold" id="lexicalMetric">--</div>
+            <div class="text-[10px] text-zinc-500 mt-1">Palabras únicas / total</div>
+          </div>
+
+          <div class="metric-card rounded-xl p-4">
+            <div class="text-xs text-zinc-500 mb-2">Variación de frases</div>
+            <div class="text-2xl font-bold" id="variationMetric">--</div>
+            <div class="text-[10px] text-zinc-500 mt-1">Variación de longitudes</div>
+          </div>
+
+          <div class="metric-card rounded-xl p-4">
+            <div class="text-xs text-zinc-500 mb-2">Conectores repetidos</div>
+            <div class="text-2xl font-bold" id="connectorMetric">--</div>
+            <div class="text-[10px] text-zinc-500 mt-1">Frecuencia detectada</div>
+          </div>
+
+          <div class="metric-card rounded-xl p-4">
+            <div class="text-xs text-zinc-500 mb-2">Longitud media</div>
+            <div class="text-2xl font-bold" id="sentenceMetric">--</div>
+            <div class="text-[10px] text-zinc-500 mt-1">Palabras por frase</div>
+          </div>
+        </div>
+
+        <div class="mt-4 text-xs text-zinc-600 leading-relaxed">
+          Estos valores son indicadores estadísticos orientativos. No permiten
+          identificar de forma concluyente el origen de un texto.
+        </div>
+
+        <!-- HUMANIZE -->
+        <div class="border-t border-white/10 mt-6 pt-5">
+
+          <div class="flex justify-between items-center mb-3">
+            <h3 class="font-semibold text-sm">Mejorar redacción</h3>
+            <span class="text-xs text-violet-300">LOCAL ENGINE</span>
+          </div>
+
+          <p class="text-xs text-zinc-500 mb-4">
+            Reorganiza la redacción y mejora su fluidez conservando el sentido general.
+          </p>
+
+          <button id="humanizeBtn"
+            class="w-full bg-gradient-to-r from-violet-600 to-indigo-600 hover:from-violet-500 hover:to-indigo-500 rounded-xl py-3.5 font-semibold text-sm shadow-lg shadow-violet-900/20">
+            ✨ Mejorar naturalidad del texto
+          </button>
+        </div>
+      </section>
+    </div>
+
+    <!-- OUTPUT -->
+    <section id="outputSection" class="glass rounded-2xl p-5 sm:p-6 mt-6 hidden">
+
+      <div class="flex flex-wrap justify-between items-center gap-3 mb-4">
+        <div>
+          <h2 class="font-semibold text-lg">Texto revisado</h2>
+          <p class="text-xs text-zinc-500 mt-1">Resultado de la transformación local</p>
+        </div>
+
+        <button id="copyBtn"
+          class="bg-zinc-800 border border-zinc-700 hover:bg-zinc-700 rounded-lg px-4 py-2 text-xs font-semibold">
+          Copiar resultado
+        </button>
+      </div>
+
+      <textarea id="outputText" readonly
+        class="w-full min-h-64 bg-zinc-900 border border-zinc-700 rounded-xl p-4 text-sm text-zinc-200 leading-7 outline-none"></textarea>
+
+      <p id="copyStatus" class="text-xs text-green-400 mt-3 hidden">
+        Texto copiado correctamente.
+      </p>
+
+      <p class="text-xs text-zinc-500 mt-4">
+        Revisa siempre el resultado. La transformación automática puede modificar
+        matices, tono o significado.
+      </p>
+    </section>
+
+    <!-- FOOTER -->
+    <footer class="text-center py-10 mt-8 border-t border-white/5">
+      <div class="font-bold text-sm mb-2">LimpIA <span class="gradient-text">studio</span></div>
+      <p class="text-xs text-zinc-600">
+        AI Text Workspace · Beta v1.0 · Hecho para escribir mejor.
+      </p>
+    </footer>
+
+  </main>
+
+  <script>
+    // ================================================
+    // LIMPIA STUDIO - MOTOR DE ANALISIS LOCAL
+    // ================================================
+
+    const $ = id => document.getElementById(id);
+
+    const input = $('inputText');
+
+    const connectors = [
+      'además',
+      'asimismo',
+      'por otro lado',
+      'en conclusión',
+      'en definitiva',
+      'por consiguiente',
+      'sin embargo',
+      'no obstante',
+      'cabe destacar',
+      'es importante destacar',
+      'en este sentido',
+      'por lo tanto',
+      'en primer lugar',
+      'en segundo lugar'
+    ];
+
+    const exampleText =
+      'En primer lugar, es importante destacar que la tecnología está transformando nuestra sociedad. Además, debemos tener en cuenta que los avances tecnológicos ofrecen nuevas oportunidades. Asimismo, resulta fundamental comprender los cambios que estamos experimentando. Por otro lado, es importante destacar que existen algunos desafíos. En conclusión, podemos afirmar que la innovación tiene un papel fundamental en nuestro futuro.';
+
+    // Dividir un texto en oraciones.
+    function getSentences(text) {
+      return (text.match(/[^.!?]+[.!?]+|[^.!?]+$/g) || [])
+        .map(s => s.trim())
+        .filter(Boolean);
+    }
+
+    // Extraer palabras.
+    function getWords(text) {
+      return text.toLowerCase().match(/\b[\p{L}\p{N}]+\b/gu) || [];
+    }
+
+    // Coeficiente de variación de longitudes.
+    function getVariation(sentences) {
+      if (sentences.length < 2) return 0;
+
+      const lengths = sentences.map(s => getWords(s).length);
+      const avg = lengths.reduce((a,b) => a+b, 0) / lengths.length;
+
+      if (!avg) return 0;
+
+      const variance = lengths.reduce(
+        (sum,n) => sum + Math.pow(n-avg,2), 0
+      ) / lengths.length;
+
+      return Math.sqrt(variance) / avg;
+    }
+
+    // Analizar diversidad léxica.
+    function getLexicalDiversity(words) {
+      if (!words.length) return 0;
+      return new Set(words).size / words.length;
+    }
+
+    // Analizar frecuencia de conectores.
+    function getConnectorCount(text) {
+      const lower = text.toLowerCase();
+      let count = 0;
+
+      connectors.forEach(connector => {
+        const escaped = connector.replace(/[.*+?^${}()|[\]\\]/g, '\\$&');
+        const matches = lower.match(
+          new RegExp('\\b' + escaped + '\\b', 'gi')
+        );
+        if (matches) count += matches.length;
+      });
+
+      return count;
+    }
+
+    // ================================================
+    // MOTOR HEURISTICO
+    // ================================================
+
+    function analyzeText(text) {
+      const words = getWords(text);
+      const sentences = getSentences(text);
+
+      if (words.length < 20 || sentences.length < 2) {
+        return null;
+      }
+
+      const diversity = getLexicalDiversity(words);
+      const variation = getVariation(sentences);
+      const connectorCount = getConnectorCount(text);
+      const avgSentence = words.length / sentences.length;
+
+      // Detectar repetición de estructuras iniciales.
+      const starts = sentences.map(s => {
+        const w = getWords(s);
+        return w.slice(0, 2).join(' ');
+      });
+
+      const repeatedStarts =
+        starts.length - new Set(starts).size;
+
+      // Frecuencia de conectores por cada 100 palabras.
+      const connectorRate = connectorCount / words.length * 100;
+
+      // Puntuaciones de señales heurísticas.
+      const connectorScore = Math.min(100, connectorRate * 100);
+
+      const diversityScore = Math.max(
+        0,
+        Math.min(100, (0.78 - diversity) * 250)
+      );
+
+      const variationScore = Math.max(
+        0,
+        Math.min(100, (0.55 - variation) * 160)
+      );
+
+      const structureScore = Math.min(
+        100,
+        repeatedStarts / sentences.length * 200
+      );
+
+      // Combinación ponderada.
+      const score = Math.round(
+        connectorScore * 0.30 +
+        diversityScore * 0.30 +
+        variationScore * 0.25 +
+        structureScore * 0.15
+      );
+
+      return {
+        score: Math.max(0, Math.min(100, score)),
+        diversity,
+        variation,
+        connectorCount,
+        avgSentence,
+        sentences: sentences.length,
+        words: words.length
+      };
+    }
+
+    // ================================================
+    // MOSTRAR RESULTADOS
+    // ================================================
+
+    function renderAnalysis(data) {
+      $('score').textContent = data.score;
+      $('progressBar').style.width = data.score + '%';
+
+      let label;
+      let description;
+
+      if (data.score < 30) {
+        label = 'Pocos patrones';
+        description = 'Se observan pocas de las señales lingüísticas evaluadas.';
+      } else if (data.score < 60) {
+        label = 'Patrones moderados';
+        description = 'Se observan algunas regularidades en la estructura y vocabulario.';
+      } else {
+        label = 'Más patrones detectados';
+        description = 'Se observan varias señales de regularidad en el texto.';
+      }
+
+      $('scoreLabel').textContent = label;
+      $('scoreDescription').textContent =
+        description + ' Este resultado no demuestra autoría de IA.';
+
+      $('lexicalMetric').textContent =
+        (data.diversity * 100).toFixed(1) + '%';
+
+      $('variationMetric').textContent =
+        (data.variation * 100).toFixed(1) + '%';
+
+      $('connectorMetric').textContent =
+        data.connectorCount;
+
+      $('sentenceMetric').textContent =
+        data.avgSentence.toFixed(1);
+
+      $('score').className =
+        'text-6xl font-extrabold tracking-tight ' +
+        (data.score < 30 ? 'text-green-400' :
+        data.score < 60 ? 'text-yellow-400' : 'text-violet-400');
+    }
+
+    function updateCounters() {
+      const text = input.value;
+      const words = getWords(text).length;
+
+      $('wordCount').textContent =
+        words + (words === 1 ? ' palabra' : ' palabras');
+
+      $('charCount').textContent =
+        text.length.toLocaleString('es-ES') + ' / 20.000 caracteres';
+    }
+
+    input.addEventListener('input', updateCounters);
+
+    $('exampleBtn').addEventListener('click', () => {
+      input.value = exampleText;
+      updateCounters();
+    });
+
+    $('clearBtn').addEventListener('click', () => {
+      input.value = '';
+      updateCounters();
+      resetResults();
+    });
+
+    function resetResults() {
+      $('score').textContent = '--';
+      $('score').className = 'text-6xl font-extrabold tracking-tight';
+      $('scoreLabel').textContent = 'Sin analizar';
+      $('scoreDescription').textContent =
+        'Introduce un texto y pulsa analizar para obtener indicadores.';
+      $('progressBar').style.width = '0%';
+
+      ['lexicalMetric','variationMetric',
+       'connectorMetric','sentenceMetric'].forEach(id => {
+        $(id).textContent = '--';
+      });
+
+      $('outputSection').classList.add('hidden');
+    }
+
+    $('analyzeBtn').addEventListener('click', () => {
+      const result = analyzeText(input.value);
+
+      if (!result) {
+        alert('Introduce al menos 20 palabras y dos oraciones para analizar el texto.');
+        return;
+      }
+
+      renderAnalysis(result);
+    });
+
+    // ================================================
+    // HUMANIZADOR / MEJORA DE REDACCION LOCAL
+    // ================================================
+
+    function humanizeText(text) {
+      let result = text.trim();
+
+      if (!result) return '';
+
+      // Alternativas de conectores para evitar repeticiones.
+      const replacements = {
+        'además': ['También', 'A esto se suma que', 'Por otra parte'],
+        'asimismo': ['Del mismo modo', 'También', 'A su vez'],
+        'por otro lado': ['Por otra parte', 'En cambio', 'Además'],
+        'sin embargo': ['Aun así', 'Pese a ello', 'Con todo'],
+        'no obstante': ['Aun así', 'Pese a eso', 'De todos modos'],
+        'por lo tanto': ['Por eso', 'Así que', 'De ahí que'],
+        'en conclusión': ['En definitiva', 'En resumen', 'En conjunto']
+      };
+
+      const used = {};
+
+      // Sustituciones controladas, conservando mayúsculas.
+      Object.entries(replacements).forEach(([original, options]) => {
+        const regex = new RegExp(
+          '\\b' + original.replace(/[.*+?^${}()|[\]\\]/g, '\\$&') + '\\b',
+          'gi'
+        );
+
+        result = result.replace(regex, match => {
+          const key = original;
+          const index = used[key] || 0;
+          used[key] = index + 1;
+
+          let replacement = options[index % options.length];
+
+          if (match[0] === match[0].toUpperCase()) {
+            replacement =
+              replacement.charAt(0).toUpperCase() +
+              replacement.slice(1);
+          }
+
+          return replacement;
+        });
+      });
+
+      // Eliminar expresiones redundantes frecuentes.
+      result = result.replace(
+        /\bes importante destacar que\b/gi,
+        'conviene señalar que'
+      );
+
+      result = result.replace(
+        /\bcabe destacar que\b/gi,
+        'hay que tener en cuenta que'
+      );
+
+      result = result.replace(
+        /\bpodemos afirmar que\b/gi,
+        'podemos decir que'
+      );
+
+      // Limpiar espacios y saltos de línea.
+      result = result
+        .replace(/[ \t]{2,}/g, ' ')
+        .replace(/\n{3,}/g, '\n\n')
+        .trim();
+
+      return result;
+    }
+
+    $('humanizeBtn').addEventListener('click', () => {
+      const text = input.value.trim();
+
+      if (getWords(text).length < 20) {
+        alert('Introduce al menos 20 palabras para mejorar el texto.');
+        return;
+      }
+
+      const improved = humanizeText(text);
+
+      $('outputText').value = improved;
+      $('outputSection').classList.remove('hidden');
+      $('copyStatus').classList.add('hidden');
+
+      $('outputSection').scrollIntoView({
+        behavior: 'smooth',
+        block: 'start'
+      });
+    });
+
+    // ================================================
+    // COPIAR RESULTADO
+    // ================================================
+
+    $('copyBtn').addEventListener('click', async () => {
+      const text = $('outputText').value;
+
+      if (!text) return;
+
+      try {
+        await navigator.clipboard.writeText(text);
+      } catch (error) {
+        $('outputText').select();
+        document.execCommand('copy');
+      }
+
+      $('copyStatus').classList.remove('hidden');
+      $('copyStatus').textContent = '✓ Texto copiado correctamente.';
+    });
+
+    // ================================================
+    // CAMBIAR TEMA
+    // ================================================
+
+    let lightMode = false;
+
+    $('themeBtn').addEventListener('click', () => {
+      lightMode = !lightMode;
+
+      if (lightMode) {
+        document.body.classList.remove('dark');
+        document.body.classList.remove('bg-zinc-950', 'text-zinc-100');
+        document.body.classList.add('bg-gray-100', 'text-gray-900');
+
+        $('themeBtn').textContent = '☾';
+
+        document.querySelectorAll('.glass').forEach(el => {
+          el.style.background = '#ffffff';
+          el.style.borderColor = '#e5e7eb';
+        });
+
+        document.querySelectorAll('textarea').forEach(el => {
+          el.style.background = '#f9fafb';
+          el.style.color = '#111827';
+          el.style.borderColor = '#d1d5db';
+        });
+
+        document.querySelectorAll('.metric-card').forEach(el => {
+          el.style.background = '#f3f4f6';
+          el.style.borderColor = '#e5e7eb';
+        });
+
+      } else {
+        document.body.classList.add('dark');
+        document.body.classList.remove('bg-gray-100', 'text-gray-900');
+        document.body.classList.add('bg-zinc-950', 'text-zinc-100');
+
+        $('themeBtn').textContent = '☀';
+
+        document.querySelectorAll('.glass').forEach(el => {
+          el.style.background = '';
+          el.style.borderColor = '';
+        });
+
+        document.querySelectorAll('textarea').forEach(el => {
+          el.style.background = '';
+          el.style.color = '';
+          el.style.borderColor = '';
+        });
+
+        document.querySelectorAll('.metric-card').forEach(el => {
+          el.style.background = '';
+          el.style.borderColor = '';
+        });
+      }
+    });
+
+    // ================================================
+    // FUTURA INTEGRACION CON API REAL
+    // ================================================
+
+    /*
+      Para escalar LimpIA studio:
+
+      1. Crear un backend seguro (Node.js, Python, etc.).
+      2. Guardar las claves API exclusivamente en el servidor.
+      3. Crear un endpoint POST /api/analyze.
+      4. Enviar el texto al endpoint desde el frontend.
+      5. Conectar un modelo lingüístico para calcular métricas
+         avanzadas, incluida la perplejidad real.
+      6. Implementar autenticación, límites de uso y pagos.
+
+      Ejemplo conceptual:
+
+      const response = await fetch('/api/analyze', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ text: input.value })
+      });
+
+      const data = await response.json();
+
+      IMPORTANTE:
+      Nunca pongas una API Key de OpenAI directamente
+      en este archivo HTML público.
+    */
+
+    updateCounters();
+
+  </script>
+</body>
+</html>
